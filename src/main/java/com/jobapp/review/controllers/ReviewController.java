@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/companies/{companyId}")
+@RequestMapping("/reviews")
 public class ReviewController {
     public ReviewService reviewService;
 
@@ -17,8 +17,8 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/reviews")
-    public ResponseEntity<List<Review>> getAllReviews(@PathVariable Long companyId) {
+    @GetMapping
+    public ResponseEntity<List<Review>> getAllReviews(@RequestParam Long companyId) {
         List<Review> reviewList = reviewService.findAllReviews(companyId);
         if (!reviewList.isEmpty())
             return new ResponseEntity<>(reviewList,
@@ -27,9 +27,9 @@ public class ReviewController {
                 HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/reviews")
-    public ResponseEntity<String> addReview(@PathVariable Long companyId
-            , @RequestBody Review review) {
+    @PostMapping
+    public ResponseEntity<String> addReview(@RequestParam Long companyId,
+                                            @RequestBody Review review) {
         Boolean reviewAdded = reviewService.addReviewForCompany(companyId, review);
         if (reviewAdded)
             return new ResponseEntity<>("Review added successfully",
@@ -38,10 +38,9 @@ public class ReviewController {
                 HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/reviews/{reviewId}")
-    public ResponseEntity<Review> getReviewById(@PathVariable Long companyId,
-                                                @PathVariable Long reviewId) {
-        Review review = reviewService.getSpecificReview(companyId, reviewId);
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<Review> getReviewById(@PathVariable Long reviewId) {
+        Review review = reviewService.getSpecificReview(reviewId);
         if (review != null)
             return new ResponseEntity<>(review,
                     HttpStatus.OK);
@@ -49,11 +48,10 @@ public class ReviewController {
                 HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<String> updateReview(@PathVariable Long companyId,
-                                                @PathVariable Long reviewId,
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<String> updateReview(@PathVariable Long reviewId,
                                                @RequestBody Review review) {
-        Boolean isUpdated = reviewService.updateReviewById(companyId, reviewId, review);
+        Boolean isUpdated = reviewService.updateReviewById(reviewId, review);
         if (isUpdated)
             return new ResponseEntity<>("Review Updated successfully",
                 HttpStatus.OK);
@@ -61,10 +59,10 @@ public class ReviewController {
                 HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/reviews/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<String> deleteReview(@PathVariable Long companyId,
                                                @PathVariable Long reviewId) {
-        Boolean isDeleted = reviewService.deleteReviewById(companyId, reviewId);
+        Boolean isDeleted = reviewService.deleteReviewById(reviewId);
         if (isDeleted)
             return new ResponseEntity<>("Review Deleted successfully",
                     HttpStatus.OK);

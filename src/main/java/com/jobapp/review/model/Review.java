@@ -1,6 +1,5 @@
 package com.jobapp.review.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +18,5 @@ public class Review {
     private String title;
     private String description;
     private Double rating;
-//    @ManyToOne
-//    @JsonIgnore
     private Long companyId;
 }
