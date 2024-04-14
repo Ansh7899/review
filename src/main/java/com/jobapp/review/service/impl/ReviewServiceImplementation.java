@@ -6,6 +6,7 @@ import com.jobapp.review.service.ReviewService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewServiceImplementation implements ReviewService {
@@ -53,13 +54,18 @@ public class ReviewServiceImplementation implements ReviewService {
     }
 
     @Override
-    public Boolean deleteReviewById(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId).orElse(null);
-        if(review != null){
-            reviewRepository.delete(review);
-            return true;
+    public Boolean deleteReviewById(Long id) {
+        try {
+            Optional<Review> reviewOptional = reviewRepository.findById(id);
+            if (reviewOptional.isPresent()) {
+                reviewRepository.deleteById(id);
+                return true; // Deletion successful
+            } else {
+                return false; // Entity with given ID doesn't exist
+            }
+        } catch (Exception e) {
+            return false; // Deletion unsuccessful due to exception
         }
-        return false;
     }
 
 }
